@@ -1,0 +1,5 @@
+{
+    "name": "nav",
+    "base": "index.hjs",
+    "data": "data.json"
+}

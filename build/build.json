@@ -1,0 +1,41 @@
+{
+    "core": {
+        "path": {
+            "scripts": "./src/core/scripts",
+            "vendor": "./src/core/vendor",
+            "pages": "./src/pages",
+            "components": "./src/components",
+            "styles": "./src/core/styles",
+            "core": "./src/core"
+        },
+
+        "scripts": {
+            "vendor": [
+                "lodash/dist/lodash.min.js"
+            ],
+            "app": [
+                "script.js"                
+            ]
+        },
+
+        "assets": [
+            "img/**/*"
+        ],
+
+        "dist": {
+            "base": "dist",
+            "styles": "css",
+            "scripts": "scripts",
+            "assets": "assets"
+        }
+    },
+
+    "pages": [
+        "index.hjs"        
+    ],
+
+    "components": [
+        "header",
+        "footer"
+    ]
+}
