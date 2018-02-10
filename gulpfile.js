@@ -90,10 +90,11 @@ gulp.task( 'pages', function() {
 gulp.task( 'styles', function() {
 
     return gulp
-        .src( build.styles )
-        .pipe( plumber({
-            errorHandler: notify.onError( 'Stylesheet error: <%= error.message %>' )
-        }))
+        .src( build.styles )        
+        .pipe(plumber({ errorHandler: function(error){
+          notify.onError({title: "Stylesheet error", message: error.message, sound: true})(error);
+          this.emit('end');
+        } }))
         .pipe( less({
             compress: !DEV
         }))
@@ -107,8 +108,14 @@ gulp.task( 'styles', function() {
  * Scripts - hint, minify and concat
  */
 gulp.task( 'scripts', function() {
+  
+    var libraries=[];
+    libraries.push('node_modules/jquery/dist/jquery.js');
+    libraries.push('node_modules/slick-carousel/slick/slick.js');
+    libraries.push('node_modules/@fancyapps/fancybox/dist/jquery.fancybox.js');
+    
     var vendorStream = gulp
-        .src(['node_modules/jquery/dist/jquery.js'],build.core.scripts.vendor )
+        .src(libraries,build.core.scripts.vendor )
         .pipe( concat( 'vendor.js ') );
 
     var appStream = gulp
@@ -269,7 +276,7 @@ gulp.task( 'watch', [ 'staticServer', 'lrServer', 'build' ], function() {
             path.join( build.core.path.components, '**/*.hjs' )
         ], reload( 'pages' ) );
 
-        gulp.watch( build.styles, reload( 'styles' ) );
+        gulp.watch( build.styles, reload( 'styles' ) );        
 
         gulp.watch( build.core.scripts.app, reload( 'scripts' ) );
 

@@ -15,7 +15,7 @@
  
 </head>
 <body>
-  <haeder>
+  <header>
     <div class="container">
       <h1><a href="#">Project title</a></h1>
       <nav>
@@ -26,4 +26,4 @@
         </ul>
       </nav>
     </div>  
-  </haeder>
+  </header>

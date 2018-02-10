@@ -12,6 +12,7 @@
   },
   "homepage": "https://github.com/thiscodeworks/boilerplate",
   "devDependencies": {
+    "@fancyapps/fancybox": "^3.2.5",
     "bootstrap": "^3.3.7",
     "connect-livereload": "^0.3.2",
     "del": "^1.1.1",
@@ -44,6 +45,7 @@
     "minimist": "0.0.8",
     "moment": "^2.5.1",
     "rimraf": "^2.2.6",
+    "slick-carousel": "^1.8.1",
     "through2": "^0.4.1",
     "tiny-lr": "0.0.5"
   }
