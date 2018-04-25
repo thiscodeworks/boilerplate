@@ -47,6 +47,8 @@
     "rimraf": "^2.2.6",
     "slick-carousel": "^1.8.1",
     "through2": "^0.4.1",
-    "tiny-lr": "0.0.5"
+    "tiny-lr": "0.0.5",
+    "gulp-sourcemaps": "2.6.4",
+    "streamqueue": "1.1.2"
   }
 }
