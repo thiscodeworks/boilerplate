@@ -11,7 +11,7 @@ var path = require('path'),
   watch = require('gulp-watch'),
   livereload = require('gulp-livereload'),
   open = require('gulp-open'),
-  less = require('gulp-less'),
+  sass = require('gulp-sass'),
   rename = require('gulp-rename'),
   jshint = require('gulp-jshint'),
   stylish = require('jshint-stylish'),
@@ -89,10 +89,10 @@ gulp.task('styles', function() {
     }))
     .pipe(sourcemaps.init())
     .pipe(sourcemaps.identityMap())
-    .pipe(less({
+    .pipe(sass({
       compress: !DEV
     }))
-    .pipe(concat('style.css'))
+    .pipe(concat('styles.css'))
     .pipe(header(banner))
     .pipe(sourcemaps.write(build.core.assets))
     .pipe(gulp.dest(build.core.dist.styles));
