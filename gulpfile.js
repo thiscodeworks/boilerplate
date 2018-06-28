@@ -195,12 +195,14 @@ gulp.task('watch', ['staticServer', 'lrServer', 'build'], function() {
       build.pages,
       path.join(build.core.path.components, '**/*.hjs')
     ], reload('pages'));
-
-    gulp.watch(build.styles, reload('styles'));
+  
+    gulp.watch("src/core/styles/**/*.scss", reload('styles'));
 
     gulp.watch(build.core.scripts.app, reload('scripts'));
+    
+    gulp.watch("src/core/img/**", reload('copy'));
 
-    gutil.log('Watching files...');
+    gutil.log('👀 Hlídám změnu v souborech...');
   });
 });
 
