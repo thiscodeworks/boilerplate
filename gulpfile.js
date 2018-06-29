@@ -17,6 +17,7 @@ var path = require('path'),
   stylish = require('jshint-stylish'),
   concat = require('gulp-concat'),
   uglify = require('gulp-uglify'),
+  uglifycss = require('gulp-uglifycss'),
   gulpif = require('gulp-if'),
   cache = require('gulp-cached'),
   header = require('gulp-header'),
@@ -63,7 +64,7 @@ gulp.task('pages', function() {
   return gulp
     .src(build.pages)
     .pipe(plumber({
-      errorHandler: notify.onError('Page Build error: <%= error.message %>')
+      errorHandler: notify.onError('Chyba v sestavení stránky: <%= error.message %>')
     }))
     .pipe(realAmerican({
       build: build
@@ -80,7 +81,7 @@ gulp.task('styles', function() {
     .pipe(plumber({
       errorHandler: function(error) {
         notify.onError({
-          title: "Stylesheet error",
+          title: "Chyba ve stylech: ",
           message: error.message,
           sound: true
         })(error);
@@ -91,6 +92,10 @@ gulp.task('styles', function() {
     .pipe(sourcemaps.identityMap())
     .pipe(sass({
       compress: !DEV
+    }))
+    .pipe(uglifycss({
+      "maxLineLen": 80,
+      "uglyComments": true
     }))
     .pipe(concat('styles.css'))
     .pipe(header(banner))
@@ -112,7 +117,7 @@ gulp.task('scripts', function() {
       gulp.src(build.core.scripts.app)
     )
     .pipe(plumber({
-      errorHandler: notify.onError('Script error: <%= error.message %>')
+      errorHandler: notify.onError('Chyba ve javascriput: <%= error.message %>')
     }))
     .pipe(jshint())
     .pipe(jshintError())
@@ -138,7 +143,7 @@ gulp.task('staticServer', function(done) {
   server.use(express.static(path.join(__dirname, build.core.dist.base)));
 
   server.listen(STATIC_PORT, function() {
-    gutil.log('Server listening on', gutil.colors.magenta(STATIC_PORT));
+    gutil.log('👂 Server poslouchá na portu: ', gutil.colors.magenta(STATIC_PORT));
 
     done();
   });
@@ -146,7 +151,7 @@ gulp.task('staticServer', function(done) {
 
 gulp.task('lrServer', function(done) {
   lr.listen(LR_PORT, function() {
-    gutil.log('livereload server listening on', gutil.colors.magenta(LR_PORT));
+    gutil.log('👂 Livereload server poslouchá na portu: ', gutil.colors.magenta(LR_PORT));
 
     done();
   });
@@ -178,7 +183,7 @@ gulp.task('watch', ['staticServer', 'lrServer', 'build'], function() {
       return gulp
         .start(task, function() {
           var filename = path.relative(__dirname, file.path);
-          gutil.log('File changed', gutil.colors.magenta(path.relative(__dirname, file.path)));
+          gutil.log('🙈 Změna v souboru', gutil.colors.magenta(path.relative(__dirname, file.path)));
 
           lr.changed({
             body: {
@@ -213,12 +218,7 @@ gulp.task('default', ['clean'], function() {
       gulp.src('./', {
           read: false
         })
-        .pipe(notify('Build Success ✔'));
-
-      if (DEV) {
-        gutil.log('');
-        gutil.log(gutil.colors.yellow('Dev build'));
-      }
+        .pipe(notify('Build Success ✔'));      
     }
   );
 });
