@@ -1,28 +1,19 @@
-@import "node_modules/bootstrap/scss/bootstrap";
+// Libraries and helpers
+// ---------
+@import 'lib/lib';
+@import 'helpers/helpers';
 
-* {
-  box-sizing: border-box;
-}
+// Variables
+// ---------
+@import 'variables/colors';
 
-body {
-  margin: 0;
-  padding: 0;
-  background: #fff;
-  color: #333;
-  -webkit-font-smoothing: antialiased;
-  &.fixed{
-    overflow: hidden;
-  }
-}
+// Reset and base files
+// --------------------
+@import 'base/base';
 
-body * {
-  transition: all 0.4s ease-in-out;
-  -webkit-transition: all 0.4s ease-in-out;
-  -moz-transition: all 0.4s ease-in-out;
-  -ms-transition: all 0.4s ease-in-out;
-  -o-transition: all 0.4s ease-in-out;
-}
+// Layouts
+// -------
+@import 'layouts/layouts';
 
-.nopadding {
-  padding: 0 !important;
-}
+// Components
+// ----------

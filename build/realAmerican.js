@@ -88,7 +88,7 @@ module.exports = function( opts ) {
         getPartials()
             .then( function( partials ) {
 
-                gutil.log( gutil.colors.magenta( '( ◔┏‸┓◔)' ), 'Hogan knows best -', gutil.colors.cyan( file.relative ) );
+                gutil.log( '🧙‍♂️  Hogan čaruje v souboru:', gutil.colors.cyan( file.relative ) );
 
                 var tmpl = hogan.compile( file.contents.toString() );
                 file.contents = new Buffer( tmpl.render( {}, partials ) );

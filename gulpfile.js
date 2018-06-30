@@ -51,8 +51,8 @@ var path = require('path'),
   banner = hogan
   .compile(
     ['/**',
-      ' *   {{ pkg.name }} v{{ pkg.version }}',
-      ' * © {{ pkg.author }} ~ {{ date }}',
+      ' * {{ pkg.name }} v{{ pkg.version }}',
+      ' * {{ pkg.author }} ~ {{ date }}',
       ' */\n'
     ].join('\n'))
   .render({
@@ -169,7 +169,7 @@ gulp.task('watch', ['staticServer', 'lrServer', 'build'], function() {
       filename = args.o;
     }
 
-    gutil.log('Opening file', gutil.colors.magenta(filename));
+    gutil.log('🤲 Otvírám soubor:', gutil.colors.magenta(filename));
 
     gulp.src(path.join(build.core.dist.base, filename))
       .pipe(open('', {
