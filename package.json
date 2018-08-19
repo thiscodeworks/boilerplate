@@ -48,10 +48,14 @@
     "rimraf": "^2.2.6",
     "slick-carousel": "^1.8.1",
     "streamqueue": "1.1.2",
+    "gulp-sass-glob": "1.0.9",
+    "gulp-svg-symbols": "3.2.0",
+    "gulp-embed-svg": "1.0.1",
     "through2": "^0.4.1",
     "tiny-lr": "0.0.5"
   },
   "dependencies": {
+    "gulp-sass-glob": "^1.0.9",
     "gulp-uglifycss": "^1.1.0"
   }
 }

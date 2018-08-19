@@ -12,6 +12,7 @@ var path = require('path'),
   livereload = require('gulp-livereload'),
   open = require('gulp-open'),
   sass = require('gulp-sass'),
+  sassGlob = require('gulp-sass-glob'),
   rename = require('gulp-rename'),
   jshint = require('gulp-jshint'),
   stylish = require('jshint-stylish'),
@@ -22,6 +23,8 @@ var path = require('path'),
   cache = require('gulp-cached'),
   header = require('gulp-header'),
   sourcemaps = require('gulp-sourcemaps'),
+  svgSymbols = require('gulp-svg-symbols'),
+  embedSvg = require('gulp-embed-svg'),
 
   eventStream = require('event-stream'),
   hljs = require('highlight.js'),
@@ -77,7 +80,8 @@ gulp.task('pages', function() {
 
 gulp.task('styles', function() {
   return gulp
-    .src(build.styles)
+    .src('src/core/styles/main.scss')    
+    .pipe(sassGlob())
     .pipe(plumber({
       errorHandler: function(error) {
         notify.onError({
@@ -157,7 +161,43 @@ gulp.task('lrServer', function(done) {
   });
 });
 
-gulp.task('build', ['pages', 'styles', 'scripts', 'copy']);
+gulp.task('sprites-svg', function () {
+  return gulp.src('src/core/img/symbols/*.svg')
+    .pipe(svgSymbols({
+        templates: [
+          `default-svg`,
+          `default-demo`          
+        ],
+      }))
+    .pipe(gulp.dest('dist/assets'));
+});
+
+gulp.task('sprites-sass', function () {  
+  gulp.src('src/core/img/symbols/*.svg')
+    .pipe(svgSymbols({
+        templates: [
+          `default-sass`          
+        ],
+      }))
+    .pipe(gulp.dest('src/core/styles/helpers'));
+  gutil.log('Generated symbols'); 
+  gulp.src("src/core/styles/helpers/svg-symbols.scss")
+    .pipe(rename("src/core/styles/helpers/_icons.scss"))
+    .pipe(gulp.dest(""));    
+  gutil.log('Renamed symbols to icons!'); 
+  return;
+});
+
+gulp.task('embedSvgs', function() {
+  return gulp.src('dist/*.html')
+    .pipe(embedSvg({
+      selectors: '.inline-svg',
+      root: 'dist'
+    }))
+    .pipe(gulp.dest('dist/'));
+});
+
+gulp.task('build', ['pages', 'styles', 'scripts', 'sprites-svg','sprites-sass', 'copy', 'embedSvgs']);
 
 gulp.task('watch', ['staticServer', 'lrServer', 'build'], function() {
 

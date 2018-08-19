@@ -1,19 +1,6 @@
-// Libraries and helpers
-// ---------
-@import 'lib/lib';
-@import 'helpers/helpers';
-
-// Variables
-// ---------
-@import 'variables/colors';
-
-// Reset and base files
-// --------------------
-@import 'base/base';
-
-// Layouts
-// -------
-@import 'layouts/layouts';
-
-// Components
-// ----------
+@import 'lib/*';
+@import 'helpers/*';
+@import 'variables/*';
+@import 'base/*';
+@import 'layouts/*';
+@import 'components/*';
