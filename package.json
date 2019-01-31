@@ -53,7 +53,9 @@
     "gulp-embed-svg": "1.0.1",
     "through2": "^0.4.1",
     "tiny-lr": "0.0.5",
-    "negotiator": "^0.6.1"
+    "negotiator": "^0.6.1",
+    "cryptiles": "^4.1.2",
+    "fresh": "^0.5.2"
   },
   "dependencies": {
     "gulp-sass-glob": "^1.0.9",
