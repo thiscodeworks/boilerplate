@@ -1,6 +1,6 @@
 {
   "name": "thiscodeworks-boilerplate",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Static boilerplate seed",
   "author": "thiscode.works",
   "repository": {
@@ -13,7 +13,7 @@
   "homepage": "https://github.com/thiscodeworks/boilerplate",
   "devDependencies": {
     "@fancyapps/fancybox": "^3.2.5",
-    "bootstrap": "^4.1",
+    "bootstrap": "^4.1.2",
     "connect-livereload": "^0.3.2",
     "del": "^1.1.1",
     "es6-promise": "^0.1.1",
@@ -52,7 +52,8 @@
     "gulp-svg-symbols": "3.2.0",
     "gulp-embed-svg": "1.0.1",
     "through2": "^0.4.1",
-    "tiny-lr": "0.0.5"
+    "tiny-lr": "0.0.5",
+    "negotiator": "^0.6.1"
   },
   "dependencies": {
     "gulp-sass-glob": "^1.0.9",

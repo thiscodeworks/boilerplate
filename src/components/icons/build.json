@@ -1,0 +1,5 @@
+{
+    "name": "icons",
+    "base": "index.hjs",    
+    "data": "data.json"
+}

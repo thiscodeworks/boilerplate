@@ -78,6 +78,33 @@ gulp.task('pages', function() {
     .pipe(gulp.dest('dist'))
 });
 
+gulp.task('styles-build', function() {
+  return gulp
+    .src('src/core/styles/main.scss')    
+    .pipe(sassGlob())
+    .pipe(plumber({
+      errorHandler: function(error) {
+        notify.onError({
+          title: "Chyba ve stylech: ",
+          message: error.message,
+          sound: true
+        })(error);
+        this.emit('end');
+      }
+    }))    
+    .pipe(sass({
+      compress: !DEV
+    }))
+    .pipe(uglifycss({
+      "maxLineLen": 80,
+      "uglyComments": true
+    }))
+    .pipe(concat('styles.css'))
+    .pipe(header(banner))
+    .pipe(sourcemaps.write(build.core.assets))
+    .pipe(gulp.dest(build.core.dist.styles));
+});
+
 gulp.task('styles', function() {
   return gulp
     .src('src/core/styles/main.scss')    
@@ -121,7 +148,7 @@ gulp.task('scripts', function() {
       gulp.src(build.core.scripts.app)
     )
     .pipe(plumber({
-      errorHandler: notify.onError('Chyba ve javascriput: <%= error.message %>')
+      errorHandler: notify.onError('Chyba ve javascriptu: <%= error.message %>')
     }))
     .pipe(jshint())
     .pipe(jshintError())
@@ -147,7 +174,7 @@ gulp.task('staticServer', function(done) {
   server.use(express.static(path.join(__dirname, build.core.dist.base)));
 
   server.listen(STATIC_PORT, function() {
-    gutil.log('👂 Server poslouchá na portu: ', gutil.colors.magenta(STATIC_PORT));
+    gutil.log('Server poslouchá na portu: ', gutil.colors.magenta(STATIC_PORT));
 
     done();
   });
@@ -155,7 +182,7 @@ gulp.task('staticServer', function(done) {
 
 gulp.task('lrServer', function(done) {
   lr.listen(LR_PORT, function() {
-    gutil.log('👂 Livereload server poslouchá na portu: ', gutil.colors.magenta(LR_PORT));
+    gutil.log('Livereload server poslouchá na portu: ', gutil.colors.magenta(LR_PORT));
 
     done();
   });
@@ -180,11 +207,14 @@ gulp.task('sprites-sass', function () {
         ],
       }))
     .pipe(gulp.dest('src/core/styles/helpers'));
-  gutil.log('Generated symbols'); 
+  gutil.log('Symboly vygenerovány'); 
   gulp.src("src/core/styles/helpers/svg-symbols.scss")
     .pipe(rename("src/core/styles/helpers/_icons.scss"))
     .pipe(gulp.dest(""));    
-  gutil.log('Renamed symbols to icons!'); 
+  gulp.src("dist/assets/svg-symbols.svg")
+    .pipe(rename("src/components/icons/index.hjs"))
+    .pipe(gulp.dest(""));  
+  gutil.log('Přejmenovány symboly na ikony.'); 
   return;
 });
 
@@ -198,6 +228,7 @@ gulp.task('embedSvgs', function() {
 });
 
 gulp.task('build', ['pages', 'styles', 'scripts', 'sprites-svg','sprites-sass', 'copy', 'embedSvgs']);
+gulp.task('build-production', ['pages', 'styles-build', 'scripts', 'sprites-svg','sprites-sass', 'copy', 'embedSvgs']);
 
 gulp.task('watch', ['staticServer', 'lrServer', 'build'], function() {
 
@@ -209,7 +240,7 @@ gulp.task('watch', ['staticServer', 'lrServer', 'build'], function() {
       filename = args.o;
     }
 
-    gutil.log('🤲 Otvírám soubor:', gutil.colors.magenta(filename));
+    gutil.log('Otevírám soubor:', gutil.colors.magenta(filename));
 
     gulp.src(path.join(build.core.dist.base, filename))
       .pipe(open('', {
@@ -223,7 +254,7 @@ gulp.task('watch', ['staticServer', 'lrServer', 'build'], function() {
       return gulp
         .start(task, function() {
           var filename = path.relative(__dirname, file.path);
-          gutil.log('🙈 Změna v souboru', gutil.colors.magenta(path.relative(__dirname, file.path)));
+          gutil.log('Změna v souboru', gutil.colors.magenta(path.relative(__dirname, file.path)));
 
           lr.changed({
             body: {
@@ -246,8 +277,10 @@ gulp.task('watch', ['staticServer', 'lrServer', 'build'], function() {
     gulp.watch(build.core.scripts.app, reload('scripts'));
     
     gulp.watch("src/core/img/**", reload('copy'));
+    
+    gulp.watch("src/core/img/symbols/*.svg", reload(['sprites-svg','sprites-sass','embedSvgs']));
 
-    gutil.log('👀 Hlídám změnu v souborech...');
+    gutil.log(gutil.colors.green.bold.underline('Hlídám změnu v souborech ...'));
   });
 });
 

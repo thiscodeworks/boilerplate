@@ -1,0 +1,10 @@
+$min-sm: 576px;
+$min-md: 768px;
+$min-lg: 992px;
+$min-xl: 1200px;
+$min-xxl: 1500px;
+$max-xs: ($min-sm - 1px);
+$max-sm: ($min-md - 1px);
+$max-md: ($min-lg - 1px);
+$max-lg: ($min-xl - 1px);
+$max-xl: ($min-xxl - 1px);

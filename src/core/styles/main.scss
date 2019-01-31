@@ -1,6 +1,8 @@
-@import 'lib/*';
-@import 'helpers/*';
-@import 'variables/*';
-@import 'base/*';
-@import 'layouts/*';
+@import "node_modules/bootstrap/scss/bootstrap";
+@import 'settings/*';
+@import 'tools/*';
+@import 'generic/*';
+@import 'elements/*';
+@import 'objects/*';
 @import 'components/*';
+@import 'utilities/*';
