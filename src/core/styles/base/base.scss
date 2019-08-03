@@ -8,12 +8,13 @@ body {
   background: #fff;
   color: #333;
   -webkit-font-smoothing: antialiased;
-  &.fixed{
+
+  &.fixed {
     overflow: hidden;
   }
 }
 
-body * {
+.easing {
   transition: all 0.4s ease-in-out;
   -webkit-transition: all 0.4s ease-in-out;
   -moz-transition: all 0.4s ease-in-out;

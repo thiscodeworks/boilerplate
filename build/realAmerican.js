@@ -1,15 +1,8 @@
-/**
- * Runs pages through hogan templating
- * ---
- *
- * Currently just applies partials
- */
-
 var fs          = require( 'fs' ),
     path        = require( 'path' ),
     gutil       = require( 'gulp-util' ),
     through     = require( 'through2' ),
-    hogan       = require( 'hogan.js' ),
+    hogan       = require( 'hogan.js' ),  
     Promise     = require( 'es6-promise' ).Promise,
     extend      = require( 'lodash-node/modern/objects/assign' ),
     component   = require( './generate-component-html' );
@@ -17,7 +10,6 @@ var fs          = require( 'fs' ),
 module.exports = function( opts ) {
     var template, cache;
 
-    // Safe to check for existence as a build form must be specified
     if ( !opts ) {
         new gutil.PluginError({
             plugin: 'realAmerican',
@@ -34,16 +26,8 @@ module.exports = function( opts ) {
     if ( !opts.build ) {
         gutil.log( gutil.colors.red( 'Error: Must specify build form for template partials' ) );
     }
-
-    /**
-     * Concurrently grabs all specified components but basically holds execution
-     * until that is done. Will retrieve from a cache for subsequent page templates.
-     */
+    
     function getPartials() {
-
-        /**
-         * Returns a promise containing the html string rep of a component
-         */
         function createComponent( comp ) {
             var obj = {};
             return new Promise( function( resolve, reject ) {
@@ -55,9 +39,6 @@ module.exports = function( opts ) {
             });
         }
 
-        /**
-         * Returns a promise containing all the partials
-         */
         return new Promise( function( resolve, reject ) {
 
             if ( !opts.build.components ) {
@@ -78,23 +59,18 @@ module.exports = function( opts ) {
             });
         });
     }
-
-
-    /**
-     * Stream template through rendering
-     */
+  
     return through.obj( function( file, enc, cb ) {
-
         getPartials()
             .then( function( partials ) {
-
                 gutil.log('Hogan skládá soubor:', gutil.colors.cyan( file.relative ) );
 
                 var tmpl = hogan.compile( file.contents.toString() );
-                file.contents = new Buffer( tmpl.render( {}, partials ) );
+                file.contents = Buffer.alloc( tmpl.render( {}, partials ) );
 
                 cb( null, file );
             })
+            
             .catch( function( err ) {
                 new gutil.PluginError({
                     plugin: 'realAmerican',

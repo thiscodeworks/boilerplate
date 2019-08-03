@@ -8,8 +8,7 @@ var path = require('path'),
   gulpBump = require('gulp-bump'),
   notify = require('gulp-notify'),
   plumber = require('gulp-plumber'),
-  watch = require('gulp-watch'),
-  livereload = require('gulp-livereload'),
+  watch = require('gulp-watch'),  
   open = require('gulp-open'),
   sass = require('gulp-sass'),
   sassGlob = require('gulp-sass-glob'),
@@ -39,14 +38,9 @@ var path = require('path'),
   jshintError = require('./build/jshint-error'),
 
   args = require('minimist')(process.argv.slice(2)),
-  lr = require('tiny-lr')(),
-  server = express(),
+  browserSync = require('browser-sync').create(),
 
-  STATIC_PORT = 9021,
-  LR_PORT = 35729,
-  PROD = args.p || process.env.NODE_ENV && process.env.NODE_ENV.match(/prod/),
-  DEV = args.d || false,
-  FORCE = args.f || false,
+  DEV = args.d || false,  
 
   pkg = require('./package.json'),
   build = require('./build/generate-buildform.js'),
@@ -65,7 +59,7 @@ var path = require('path'),
 
 gulp.task('pages', function() {
   return gulp
-    .src(build.pages)
+    .src(build.core.path.pages+'*.hjs')
     .pipe(plumber({
       errorHandler: notify.onError('Chyba v sestavení stránky: <%= error.message %>')
     }))
@@ -80,7 +74,7 @@ gulp.task('pages', function() {
 
 gulp.task('styles-build', function() {
   return gulp
-    .src('src/core/styles/main.scss')    
+    .src('src/core/styles/main.scss')
     .pipe(sassGlob())
     .pipe(plumber({
       errorHandler: function(error) {
@@ -91,7 +85,7 @@ gulp.task('styles-build', function() {
         })(error);
         this.emit('end');
       }
-    }))    
+    }))
     .pipe(sass({
       compress: !DEV
     }))
@@ -101,13 +95,12 @@ gulp.task('styles-build', function() {
     }))
     .pipe(concat('styles.css'))
     .pipe(header(banner))
-    .pipe(sourcemaps.write(build.core.assets))
     .pipe(gulp.dest(build.core.dist.styles));
 });
 
 gulp.task('styles', function() {
   return gulp
-    .src('src/core/styles/main.scss')    
+    .src('src/core/styles/main.scss')
     .pipe(sassGlob())
     .pipe(plumber({
       errorHandler: function(error) {
@@ -148,10 +141,10 @@ gulp.task('scripts', function() {
       gulp.src(build.core.scripts.app)
     )
     .pipe(plumber({
-      errorHandler: notify.onError('Chyba ve javascriptu: <%= error.message %>')
+      errorHandler: notify.onError('Chyba v javascriptu: <%= error %>')
     }))
     .pipe(jshint())
-    .pipe(jshintError())
+    .pipe(jshint.reporter('default'))
     .pipe(gulpif(!DEV, uglify()))
     .pipe(header(banner))
     .pipe(concat('index.js'))
@@ -159,6 +152,7 @@ gulp.task('scripts', function() {
 });
 
 gulp.task('copy', function() {
+  gutil.log('Finální soubory vygenerovány.');
   return gulp
     .src(build.core.assets)
     .pipe(cache('copy'))
@@ -169,53 +163,50 @@ gulp.task('clean', function(done) {
   del([path.join(build.core.dist.base, '/**/*')], done);
 });
 
-gulp.task('staticServer', function(done) {
-  server.use(connectLivereload());
-  server.use(express.static(path.join(__dirname, build.core.dist.base)));
-
-  server.listen(STATIC_PORT, function() {
-    gutil.log('Server poslouchá na portu: ', gutil.colors.magenta(STATIC_PORT));
-
+gulp.task('browser-sync', function(done) {
+    browserSync.init({                  
+      injectChanges: true,
+      server: {
+          baseDir: "./dist",
+          port: 9021
+      }
+    });
     done();
-  });
 });
 
-gulp.task('lrServer', function(done) {
-  lr.listen(LR_PORT, function() {
-    gutil.log('Livereload server poslouchá na portu: ', gutil.colors.magenta(LR_PORT));
-
-    done();
-  });
-});
-
-gulp.task('sprites-svg', function () {
+gulp.task('sprites-svg', function() {
   return gulp.src('src/core/img/symbols/*.svg')
     .pipe(svgSymbols({
-        templates: [
-          `default-svg`,
-          `default-demo`          
-        ],
-      }))
+      templates: [
+        `default-svg`,
+        `default-demo`
+      ],
+    }))
     .pipe(gulp.dest('dist/assets'));
 });
 
-gulp.task('sprites-sass', function () {  
+gulp.task('sprites-sass', function() {
   gulp.src('src/core/img/symbols/*.svg')
     .pipe(svgSymbols({
-        templates: [
-          `default-sass`          
-        ],
-      }))
+      templates: [
+        `default-sass`
+      ],
+    }))
     .pipe(gulp.dest('src/core/styles/helpers'));
-  gutil.log('Symboly vygenerovány'); 
-  gulp.src("src/core/styles/helpers/svg-symbols.scss")
+    
+  gutil.log('Symboly vygenerovány');
+  
+  gulp.src("src/core/styles/helpers/svg-symbols.scss",{ allowEmpty: true })
     .pipe(rename("src/core/styles/helpers/_icons.scss"))
-    .pipe(gulp.dest(""));    
-  gulp.src("dist/assets/svg-symbols.svg")
+    .pipe(gulp.dest("src/core/styles/helpers/"));
+    
+  gulp.src("dist/assets/svg-symbols.svg",{ allowEmpty: true })
     .pipe(rename("src/components/icons/index.hjs"))
-    .pipe(gulp.dest(""));  
-  gutil.log('Přejmenovány symboly na ikony.'); 
-  return;
+    .pipe(gulp.dest("src/components/icons/"));
+    
+  gutil.log('Přejmenovány symboly na ikony.');
+  
+  return true;
 });
 
 gulp.task('embedSvgs', function() {
@@ -227,71 +218,21 @@ gulp.task('embedSvgs', function() {
     .pipe(gulp.dest('dist/'));
 });
 
-gulp.task('build', ['pages', 'styles', 'scripts', 'sprites-svg','sprites-sass', 'copy', 'embedSvgs']);
-gulp.task('build-production', ['pages', 'styles-build', 'scripts', 'sprites-svg','sprites-sass', 'copy', 'embedSvgs']);
+gulp.task('build', gulp.series('pages', 'styles', 'scripts', 'sprites-svg', 'copy', 'embedSvgs'));
+gulp.task('build-production', gulp.series('pages', 'styles-build', 'scripts', 'sprites-svg', 'sprites-sass', 'copy', 'embedSvgs'));
 
-gulp.task('watch', ['staticServer', 'lrServer', 'build'], function() {
-
-  if (args.o) {
-    var filename = 'index.html',
-      host = args.e ? 'http://0.0.0.0:' : 'http://localhost:';
-
-    if (typeof args.o === 'string' && fs.existsSync(path.join(build.core.dist.base, args.o))) {
-      filename = args.o;
-    }
-
-    gutil.log('Otevírám soubor:', gutil.colors.magenta(filename));
-
-    gulp.src(path.join(build.core.dist.base, filename))
-      .pipe(open('', {
-        url: path.join(host + STATIC_PORT, filename)
-      }));
-  }
-
-  function reload(task) {
-
-    return function(file) {
-      return gulp
-        .start(task, function() {
-          var filename = path.relative(__dirname, file.path);
-          gutil.log('Změna v souboru', gutil.colors.magenta(path.relative(__dirname, file.path)));
-
-          lr.changed({
-            body: {
-              files: gutil.replaceExtension(path.basename(file.path), '')
-            }
-          });
-        });
-    }
-  }
-
-  gulp.start(function() {
-
-    gulp.watch([
-      build.pages,
-      path.join(build.core.path.components, '**/*.hjs')
-    ], reload('pages'));
-  
-    gulp.watch("src/core/styles/**/*.scss", reload('styles'));
-
-    gulp.watch(build.core.scripts.app, reload('scripts'));
+gulp.task('watch', gulp.series('browser-sync','build', function() {      
+  function reload(file){    
+    setTimeout(function(){ lr.changed({body: {files: ["styles.css","index.js"]}});},5000);
     
-    gulp.watch("src/core/img/**", reload('copy'));
-    
-    gulp.watch("src/core/img/symbols/*.svg", reload(['sprites-svg','sprites-sass','embedSvgs']));
-
+    gutil.log('Změna v souboru', gutil.colors.magenta(file));      
     gutil.log(gutil.colors.green.bold.underline('Hlídám změnu v souborech ...'));
-  });
-});
-
-gulp.task('default', ['clean'], function() {
-  return gulp.start(
-    'build',
-    function() {
-      gulp.src('./', {
-          read: false
-        })
-        .pipe(notify('Build Success ✔'));      
-    }
-  );
-});
+  }
+  
+  gulp.watch([path.join(build.core.path.pages, '*.hjs'),path.join(build.core.path.components, '**/*.hjs')], gulp.series('pages')).on('change', browserSync.reload);
+  gulp.watch('src/core/styles/**/*.scss', gulp.series('styles')).on('change', browserSync.reload);
+  gulp.watch(build.core.scripts.app, gulp.series('scripts')).on('change', browserSync.reload);
+  gulp.watch("src/core/img/**", gulp.series('copy'));
+  gulp.watch("src/core/img/symbols/*.svg", gulp.series('sprites-svg', 'sprites-sass', 'embedSvgs'));
+  gutil.log(gutil.colors.green.bold.underline('Hlídám změnu v souborech ...'));  
+}));
