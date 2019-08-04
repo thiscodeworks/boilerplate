@@ -1,8 +1,5 @@
 {{> partials/header}}
   <main>
-    <h1>Test</h1>
-    <ul>
-      <li>Zkouška</li>
-    </ul>
+  
   </main>
 {{> partials/footer}}
