@@ -129,7 +129,9 @@
   gulp.task('copy', function() {
     gutil.log('Finální soubory vygenerovány.');
     return gulp
-      .src(build.core.path.assets)
+      .src(build.core.path.assets,{
+        allowEmpty: true
+      })
       .pipe(cache('copy'))
       .pipe(gulp.dest(build.core.dist.assets))
   });
