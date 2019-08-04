@@ -10,7 +10,7 @@ Thiscode.works Boilerplate is a front-end template for building web apps or site
 
 ## Quick start
 
-Choose one of the following options:
+Clone it, run it:
 
 - Clone the git repo — `git clone
   git@github.com:thiscodeworks/boilerplate.git`
@@ -23,10 +23,15 @@ Choose one of the following options:
 
 ## Features
 
-* Live reloading with BrowserSync
-* Image optimalization
 * Works with Gulp 4
+* Watch for file changes & automatically recompile build
+* Live reloading with BrowserSync
 * Using hogan template builder
+* Automatically project details to header of JS and CSS files
+* Build static sites and minified files to /dist folder
+* Optimize SVG files and create UI for all icons
+* Optimize all images
+* Compile, minify, autoprefix, and lint Sass
 * This boilerplate uses the latest versions of the following libraries:
   * [`Gulp 4`](https://gulpjs.com/)
   * [`Normalize.css`](https://necolas.github.com/normalize.css/)

@@ -1,39 +1,42 @@
   var
-  path = require('path'),
-  fs = require('fs'),
-  gulp = require('gulp'),
-  gutil = require('gulp-util'),
-  notify = require('gulp-notify'),
-  plumber = require('gulp-plumber'),
-  watch = require('gulp-watch'),
-  sass = require('gulp-sass'),
-  sassGlob = require('gulp-sass-glob'),
-  rename = require('gulp-rename'),
-  jshint = require('gulp-jshint'),
-  concat = require('gulp-concat'),
-  uglify = require('gulp-uglify'),
-  uglifycss = require('gulp-uglifycss'),
-  gulpif = require('gulp-if'),
-  cache = require('gulp-cached'),
-  header = require('gulp-header'),
-  sourcemaps = require('gulp-sourcemaps'),
-  svgSymbols = require('gulp-svg-symbols'),
-  embedSvg = require('gulp-embed-svg'),
-  hogan = require('gulp-hogan'),
-  moment = require('moment'),
-  streamqueue = require('streamqueue'),
-  browserSync = require('browser-sync').create(),
-  pkg = require('./package.json'),
-  build = require('./build/build.json');
-  
+    path = require('path'),
+    fs = require('fs'),
+    gulp = require('gulp'),
+    gutil = require('gulp-util'),
+    notify = require('gulp-notify'),
+    plumber = require('gulp-plumber'),
+    watch = require('gulp-watch'),
+    sass = require('gulp-sass'),
+    sassGlob = require('gulp-sass-glob'),
+    rename = require('gulp-rename'),
+    jshint = require('gulp-jshint'),
+    concat = require('gulp-concat'),
+    uglify = require('gulp-uglify'),
+    uglifycss = require('gulp-uglifycss'),
+    gulpif = require('gulp-if'),
+    cache = require('gulp-cached'),
+    header = require('gulp-header'),
+    sourcemaps = require('gulp-sourcemaps'),
+    svgSymbols = require('gulp-svg-symbols'),
+    embedSvg = require('gulp-embed-svg'),
+    hogan = require('gulp-hogan'),
+    moment = require('moment'),
+    streamqueue = require('streamqueue'),
+    imagemin = require('gulp-imagemin'),
+    browserSync = require('browser-sync').create(),
+    pkg = require('./package.json'),
+    build = require('./build/build.json');
+
+
   banner = ['/**',
-  ' * <%= pkg.name %>',
-  ' * @version v<%= pkg.version %>',
-  ' * @link <%= pkg.homepage %>',
-  ' * @author <%= pkg.author %>',
-  ' * @builded '+moment().format("LLLL"),
-  ' */\n',
-  ''].join('\n');
+    ' * <%= pkg.name %>',
+    ' * @version v<%= pkg.version %>',
+    ' * @link <%= pkg.homepage %>',
+    ' * @author <%= pkg.author %>',
+    ' * @builded ' + moment().format("LLLL"),
+    ' */\n',
+    ''
+  ].join('\n');
 
 
   gulp.task('pages', function() {
@@ -71,7 +74,9 @@
         "uglyComments": true
       }))
       .pipe(concat('styles.css'))
-      .pipe(header(banner, { pkg : pkg }))
+      .pipe(header(banner, {
+        pkg: pkg
+      }))
       .pipe(gulp.dest(build.core.dist.styles));
   });
 
@@ -99,7 +104,9 @@
         "uglyComments": true
       }))
       .pipe(concat('styles.css'))
-      .pipe(header(banner, { pkg : pkg } ))
+      .pipe(header(banner, {
+        pkg: pkg
+      }))
       //.pipe(sourcemaps.write(build.core.path.assets))
       .pipe(gulp.dest(build.core.dist.styles));
   });
@@ -118,20 +125,42 @@
       .pipe(plumber({
         errorHandler: notify.onError('Chyba v javascriptu: <%= error %>')
       }))
-      .pipe(jshint())
-      .pipe(jshint.reporter('default'))
-      .pipe(gulpif(true, uglify()))      
+      .pipe(jshint())      
+      .pipe(uglify()).on("error", function(err) {
+        notify.onError('Chyba v javascriptu: ' + err.cause)
+      })
       .pipe(concat('index.js'))
-      .pipe(header(banner, { pkg : pkg } ))
+      .pipe(header(banner, {
+        pkg: pkg
+      }))
       .pipe(gulp.dest(build.core.dist.scripts));
   });
 
   gulp.task('copy', function() {
-    gutil.log('Finální soubory vygenerovány.');
     return gulp
-      .src(build.core.path.assets,{
+      .src(build.core.path.assets, {
         allowEmpty: true
       })
+      .pipe(imagemin([
+        imagemin.gifsicle({
+          interlaced: true
+        }),
+        imagemin.jpegtran({
+          progressive: true
+        }),
+        imagemin.optipng({
+          optimizationLevel: 5
+        }),
+        imagemin.svgo({
+          plugins: [{
+              removeViewBox: true
+            },
+            {
+              cleanupIDs: false
+            }
+          ]
+        })
+      ]))
       .pipe(cache('copy'))
       .pipe(gulp.dest(build.core.dist.assets))
   });
@@ -198,7 +227,7 @@
   gulp.task('build', gulp.series('pages', 'styles', 'scripts', 'sprites-svg', 'copy', 'embedSvgs'));
   gulp.task('build-production', gulp.series('pages', 'styles-build', 'scripts', 'sprites-svg', 'sprites-sass', 'copy', 'embedSvgs'));
 
-  gulp.task('watch', gulp.series('browser-sync', 'build', function() {    
+  gulp.task('watch', gulp.series('browser-sync', 'build', function() {
     gulp.watch([path.join(build.core.path.pages, '*.hjs'), path.join(build.core.path.pages, '/**/*.hjs')], gulp.series('pages')).on('change', browserSync.reload);
     gulp.watch(build.core.path.styles + '/**/*.scss', gulp.series('styles')).on('change', browserSync.reload);
     gulp.watch(build.core.path.scripts + "/*.js", gulp.series('scripts')).on('change', browserSync.reload);
