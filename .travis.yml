@@ -8,4 +8,4 @@ sudo: false
 install:
   - npm install
 script:
-  - gulp watch  
+  - gulp build  
