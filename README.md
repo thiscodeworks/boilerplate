@@ -17,12 +17,17 @@ Choose one of the following options:
 - Install with [npm](https://www.npmjs.com/): `npm install`
 - Run with [gulp](https://gulpjs.com/): `gulp watch`
 
+## Requirements
+- Node/NPM
+- Gulp
 
 ## Features
 
-* HTML5 ready. Use the new elements with confidence.
-* Designed with progressive enhancement in mind.
-* Includes:
+* Live reloading with BrowserSync
+* Image optimalization
+* Works with Gulp 4
+* Using hogan template builder
+* This boilerplate uses the latest versions of the following libraries:
   * [`Gulp 4`](https://gulpjs.com/)
   * [`Normalize.css`](https://necolas.github.com/normalize.css/)
   * [`jQuery`](https://jquery.com/)
