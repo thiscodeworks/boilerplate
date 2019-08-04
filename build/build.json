@@ -1,42 +1,16 @@
 {
     "core": {
         "path": {
-            "scripts": "./src/core/scripts",
-            "vendor": "./src/core/vendor",
+            "scripts": "./src/core/scripts",            
             "pages": "./src/pages",
-            "components": "./src/components",
             "styles": "./src/core/styles",
-            "core": "./src/core"
+            "assets": "./src/core/img"            
         },
-
-        "scripts": {
-            "vendor": [
-                "lodash/dist/lodash.min.js"
-            ],
-            "app": [
-                "script.js"                
-            ]
-        },
-
-        "assets": [
-            "img/**/*"
-        ],
-
-        "dist": {
-            "base": "dist",
-            "styles": "css",
-            "scripts": "scripts",
-            "assets": "assets"
+      
+        "dist": {            
+            "styles": "./dist/css",
+            "scripts": "./dist/scripts",
+            "assets": "./dist/assets"
         }
-    },
-
-    "pages": [
-        "index.hjs"        
-    ],
-
-    "components": [
-        "header",
-        "footer",
-        "icons"
-    ]
+    }
 }

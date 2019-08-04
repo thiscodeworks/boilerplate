@@ -29,13 +29,11 @@ var path = require('path'),
   hljs = require('highlight.js'),
   express = require('express'),
   connectLivereload = require('connect-livereload'),
-  hogan = require('hogan.js'),
+  hogan = require('gulp-hogan'),
   moment = require('moment'),
   del = require('del'),
   streamqueue = require('streamqueue'),
   bump = require('./build/bump'),
-  realAmerican = require('./build/realAmerican'),
-  jshintError = require('./build/jshint-error'),
 
   args = require('minimist')(process.argv.slice(2)),
   browserSync = require('browser-sync').create(),
@@ -43,38 +41,32 @@ var path = require('path'),
   DEV = args.d || false,  
 
   pkg = require('./package.json'),
-  build = require('./build/generate-buildform.js'),
+  build = require('./build/build.json');
 
-  banner = hogan
-  .compile(
-    ['/**',
-      ' * {{ pkg.name }} v{{ pkg.version }}',
-      ' * {{ pkg.author }} ~ {{ date }}',
-      ' */\n'
-    ].join('\n'))
-  .render({
-    pkg: pkg,
-    date: moment().format("MMM Do YYYY")
-  });
+  // banner = hogan
+  // .compile(
+  //   ['/**',
+  //     ' * {{ pkg.name }} v{{ pkg.version }}',
+  //     ' * {{ pkg.author }} ~ {{ date }}',
+  //     ' */\n'
+  //   ].join('\n'))
+  // .render({
+  //   pkg: pkg,
+  //   date: moment().format("MMM Do YYYY")
+  // });
 
-gulp.task('pages', function() {
+gulp.task('pages', function() {    
   return gulp
-    .src(build.core.path.pages+'*.hjs')
-    .pipe(plumber({
-      errorHandler: notify.onError('Chyba v sestavení stránky: <%= error.message %>')
-    }))
-    .pipe(realAmerican({
-      build: build
-    }))
-    .pipe(rename({
-      extname: '.html'
-    }))
-    .pipe(gulp.dest('dist'))
+    .src(build.core.path.pages+'/*.hjs')    
+    .pipe(hogan({},null,'.html'))    
+    .pipe(rename({extname:'.html'}))  
+    .pipe(gulp.dest('./dist'))    
+    .on('end', function(){ gutil.log('Stránky vygenerovány') });
 });
 
 gulp.task('styles-build', function() {
   return gulp
-    .src('src/core/styles/main.scss')
+    .src(build.core.path.styles+'/main.scss')
     .pipe(sassGlob())
     .pipe(plumber({
       errorHandler: function(error) {
@@ -94,13 +86,13 @@ gulp.task('styles-build', function() {
       "uglyComments": true
     }))
     .pipe(concat('styles.css'))
-    .pipe(header(banner))
+    //.pipe(header(banner))
     .pipe(gulp.dest(build.core.dist.styles));
 });
 
 gulp.task('styles', function() {
   return gulp
-    .src('src/core/styles/main.scss')
+    .src(build.core.path.styles+'/main.scss')
     .pipe(sassGlob())
     .pipe(plumber({
       errorHandler: function(error) {
@@ -122,23 +114,21 @@ gulp.task('styles', function() {
       "uglyComments": true
     }))
     .pipe(concat('styles.css'))
-    .pipe(header(banner))
-    .pipe(sourcemaps.write(build.core.assets))
+    //.pipe(header(banner))
+    //.pipe(sourcemaps.write(build.core.path.assets))
     .pipe(gulp.dest(build.core.dist.styles));
 });
 
 gulp.task('scripts', function() {
 
-  var libraries = [];
-  libraries.push('node_modules/jquery/dist/jquery.js');
-  libraries.push('node_modules/slick-carousel/slick/slick.js');
-  libraries.push('node_modules/@fancyapps/fancybox/dist/jquery.fancybox.js');
-
+  var libraries = require(build.core.path.scripts+'/libraries.json' );
+  var scripts = require(build.core.path.scripts+'/scripts.json' );
+    
   return streamqueue({
         objectMode: true
       },
-      gulp.src(libraries, build.core.scripts.vendor),
-      gulp.src(build.core.scripts.app)
+      gulp.src(libraries),
+      gulp.src(scripts)
     )
     .pipe(plumber({
       errorHandler: notify.onError('Chyba v javascriptu: <%= error %>')
@@ -146,7 +136,7 @@ gulp.task('scripts', function() {
     .pipe(jshint())
     .pipe(jshint.reporter('default'))
     .pipe(gulpif(!DEV, uglify()))
-    .pipe(header(banner))
+    //.pipe(header(banner))
     .pipe(concat('index.js'))
     .pipe(gulp.dest(build.core.dist.scripts));
 });
@@ -154,13 +144,9 @@ gulp.task('scripts', function() {
 gulp.task('copy', function() {
   gutil.log('Finální soubory vygenerovány.');
   return gulp
-    .src(build.core.assets)
+    .src(build.core.path.assets)
     .pipe(cache('copy'))
     .pipe(gulp.dest(build.core.dist.assets))
-});
-
-gulp.task('clean', function(done) {
-  del([path.join(build.core.dist.base, '/**/*')], done);
 });
 
 gulp.task('browser-sync', function(done) {
@@ -175,7 +161,7 @@ gulp.task('browser-sync', function(done) {
 });
 
 gulp.task('sprites-svg', function() {
-  return gulp.src('src/core/img/symbols/*.svg')
+  return gulp.src(build.core.path.assets+'/symbols/*.svg')
     .pipe(svgSymbols({
       templates: [
         `default-svg`,
@@ -201,8 +187,8 @@ gulp.task('sprites-sass', function() {
     .pipe(gulp.dest("src/core/styles/helpers/"));
     
   gulp.src("dist/assets/svg-symbols.svg",{ allowEmpty: true })
-    .pipe(rename("src/components/icons/index.hjs"))
-    .pipe(gulp.dest("src/components/icons/"));
+    .pipe(rename("src/pages/partials/icons.hjs"))
+    .pipe(gulp.dest("src/pages/partials/"));
     
   gutil.log('Přejmenovány symboly na ikony.');
   
@@ -229,10 +215,10 @@ gulp.task('watch', gulp.series('browser-sync','build', function() {
     gutil.log(gutil.colors.green.bold.underline('Hlídám změnu v souborech ...'));
   }
   
-  gulp.watch([path.join(build.core.path.pages, '*.hjs'),path.join(build.core.path.components, '**/*.hjs')], gulp.series('pages')).on('change', browserSync.reload);
-  gulp.watch('src/core/styles/**/*.scss', gulp.series('styles')).on('change', browserSync.reload);
-  gulp.watch(build.core.scripts.app, gulp.series('scripts')).on('change', browserSync.reload);
-  gulp.watch("src/core/img/**", gulp.series('copy'));
-  gulp.watch("src/core/img/symbols/*.svg", gulp.series('sprites-svg', 'sprites-sass', 'embedSvgs'));
+  gulp.watch([path.join(build.core.path.pages, '*.hjs'),path.join(build.core.path.pages, '/**/*.hjs')], gulp.series('pages')).on('change', browserSync.reload);
+  gulp.watch(build.core.path.styles+'/**/*.scss', gulp.series('styles')).on('change', browserSync.reload);
+  gulp.watch(build.core.path.scripts+"/*.js", gulp.series('scripts')).on('change', browserSync.reload);
+  gulp.watch(build.core.path.assets+"/**", gulp.series('copy'));
+  gulp.watch(build.core.path.assets+"/symbols/*.svg", gulp.series('sprites-svg', 'sprites-sass', 'embedSvgs'));
   gutil.log(gutil.colors.green.bold.underline('Hlídám změnu v souborech ...'));  
 }));

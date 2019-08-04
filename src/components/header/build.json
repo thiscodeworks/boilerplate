@@ -1,5 +1,0 @@
-{
-    "name": "header",
-    "base": "index.hjs",    
-    "data": "data.json"
-}
