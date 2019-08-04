@@ -3,6 +3,7 @@
 [![StyleCI](https://github.styleci.io/repos/101681917/shield?branch=sass)](https://github.styleci.io/repos/101681917/)
 [![TravisCI](https://api.travis-ci.org/thiscodeworks/boilerplate.svg?branch=sass)](https://travis-ci.org/thiscodeworks/boilerplate)
 [![Known Vulnerabilities](https://snyk.io/test/github/thiscodeworks/boilerplate/badge.svg)](https://snyk.io/test/github/thiscodeworks/boilerplate)
+[![dependencies Status](https://david-dm.org/thiscodeworks/boilerplate/status.svg)](https://david-dm.org/thiscodeworks/boilerplate)
 [![GitHub version](https://badge.fury.io/gh/thiscodeworks%2Fboilerplate.svg)](https://badge.fury.io/gh/thiscodeworks%2Fboilerplate)
 
 Thiscode.works Boilerplate is a front-end template for building web apps or sites with gulp 4.
