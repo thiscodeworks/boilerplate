@@ -1,6 +1,7 @@
 # [Thiscode.works Boilerplate](https://thiscode.works/)
 [![LICENSE](https://img.shields.io/badge/license-MIT-lightgrey.svg)](https://github.com/h5bp/html5-boilerplate/blob/master/LICENSE.txt)
-[![StyleCI](https://github.styleci.io/repos/101681917/shield?branch=sass&style=plastic)](https://github.styleci.io/repos/101681917/)
+[![StyleCI](https://github.styleci.io/repos/101681917/shield?branch=sass)](https://github.styleci.io/repos/101681917/)
+[![TravisCI](https://api.travis-ci.org/thiscodeworks/boilerplate.svg?branch=sass)](https://travis-ci.org/thiscodeworks/boilerplate)
 
 Thiscode.works Boilerplate is a front-end template for building web apps or sites with gulp 4.
 
