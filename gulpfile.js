@@ -138,7 +138,7 @@
 
   gulp.task('copy', function() {
     return gulp
-      .src(build.core.path.assets, {
+      .src(build.core.path.assets+"/**", {
         allowEmpty: true
       })
       .pipe(imagemin([
@@ -153,6 +153,10 @@
         }),
         imagemin.svgo({
           plugins: [{
+              removeUselessStrokeAndFill: true,
+              cleanupIDs: true,
+              removeEmptyAttrs: true,
+              cleanupAttrs: true,
               removeViewBox: true
             },
             {
@@ -233,5 +237,5 @@
     gulp.watch(build.core.path.scripts + "/*.js", gulp.series('scripts')).on('change', browserSync.reload);
     gulp.watch(build.core.path.assets + "/**", gulp.series('copy'));
     gulp.watch(build.core.path.assets + "/symbols/*.svg", gulp.series('sprites-svg', 'sprites-sass', 'embedSvgs'));
-    gutil.log(gutil.colors.green.bold.underline('Hlídám změnu v souborech ...'));
+    gutil.log(gutil.colors.green.bold.underline('Hlídám změnu v souborech ...'));    
   }));
