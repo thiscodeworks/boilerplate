@@ -3,7 +3,7 @@
  * @version v2.0.0
  * @link https://github.com/thiscodeworks/boilerplate
  * @author thiscode.works
- * @builded Wednesday, December 25, 2019 11:13 AM
+ * @builded Wednesday, December 25, 2019 11:18 AM
  */
 
 /* * Bootstrap v4.3.1 (https://getbootstrap.com/) * Copyright 2011-2019 The Bootstrap Authors * Copyright 2011-2019 Twitter, Inc. * Licensed under MIT (https://github.com/twbs/bootstrap/blob/master/LICENSE) */:root{--blue:#007bff;--indigo:#6610f2;--purple:#6f42c1;--pink:#e83e8c;--red:#dc3545;--orange:#fd7e14;--yellow:#ffc107;--green:#28a745;--teal:#20c997;--cyan:#17a2b8;--white:#fff;--gray:#6c757d;--gray-dark:#343a40;--primary:#007bff;--secondary:#6c757d;--success:#28a745;--info:#17a2b8;--warning:#ffc107;--danger:#dc3545;--light:#f8f9fa;--dark:#343a40;--breakpoint-xs:0;--breakpoint-sm:576px;--breakpoint-md:768px;--breakpoint-lg:992px;--breakpoint-xl:1200px;--font-family-sans-serif:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans",sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol","Noto Color Emoji";--font-family-monospace:SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace}
@@ -1106,5 +1106,15 @@ input[type="search"]::-webkit-search-cancel-button,input[type="search"]::-webkit
 fieldset{border:1px solid silver;margin:0 2px;padding:.35em .625em .75em}legend{border:0;padding:0}
 textarea{overflow:auto}optgroup{font-weight:bold}table{border-collapse:collapse;border-spacing:0}
 td,th{padding:0}*{box-sizing:border-box}body{margin:0;padding:0;background:#fff;color:#333;-webkit-font-smoothing:antialiased}
-body.fixed{overflow:hidden}.easing{transition:all .4s ease-in-out;-webkit-transition:all .4s ease-in-out;-moz-transition:all .4s ease-in-out;-ms-transition:all .4s ease-in-out;-o-transition:all .4s ease-in-out}
+body.fixed{overflow:hidden}.easing,.header__respo span{transition:all .4s ease-in-out;-webkit-transition:all .4s ease-in-out;-moz-transition:all .4s ease-in-out;-ms-transition:all .4s ease-in-out;-o-transition:all .4s ease-in-out}
 .nopadding{padding:0 !important}.svgicons{border:0 !important;clip:rect(0 0 0 0) !important;height:1px !important;margin:-1px !important;overflow:hidden !important;padding:0 !important;position:absolute !important;width:1px !important}
+.header__nav{margin:0;padding:0;list-style:none}@media(max-width:767px){.header__nav{display:none;position:absolute;top:50px}
+}.header__nav--open{display:block}.header__nav li{display:inline-block;padding:0 15px}
+@media(max-width:767px){.header__nav li{width:100%;padding:0}}.header__nav li a{padding:0}
+@media(max-width:767px){.header__nav li a{padding:0 15px}}.header__respo{display:none;width:30px;height:30px;position:relative;-webkit-transform:rotate(0);-moz-transform:rotate(0);-o-transform:rotate(0);transform:rotate(0);-webkit-transition:.5s ease-in-out;-moz-transition:.5s ease-in-out;-o-transition:.5s ease-in-out;transition:.5s ease-in-out;cursor:pointer}
+@media(max-width:767px){.header__respo{display:block}}.header__respo span{display:block;position:absolute;height:4px;width:100%;background:#000;border-radius:3px;opacity:1;left:0;-webkit-transform:rotate(0);-moz-transform:rotate(0);-o-transform:rotate(0);transform:rotate(0)}
+.header__respo span:nth-child(1){top:0}.header__respo span:nth-child(2),.header__respo span:nth-child(3){top:9px}
+.header__respo span:nth-child(4){top:18px}.header__respo--open span:nth-child(1){top:9px;width:0;left:50%}
+.header__respo--open span:nth-child(2){-webkit-transform:rotate(45deg);-moz-transform:rotate(45deg);-o-transform:rotate(45deg);transform:rotate(45deg)}
+.header__respo--open span:nth-child(3){-webkit-transform:rotate(-45deg);-moz-transform:rotate(-45deg);-o-transform:rotate(-45deg);transform:rotate(-45deg)}
+.header__respo--open span:nth-child(4){top:9px;width:0;left:50%}

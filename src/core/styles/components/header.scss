@@ -1,0 +1,110 @@
+.header {
+  &__nav {
+    @media (max-width: $max-sm) {
+      display: none;
+      position: absolute;
+      top: 50px;
+    }
+
+    &--open {
+      display: block;
+    }
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    li {
+      display: inline-block;
+      padding: 0 15px;
+      @media (max-width: $max-sm) {
+        width: 100%;
+        padding: 0;
+      }
+
+      a {
+        padding: 0;
+        @media (max-width: $max-sm) {
+          padding: 0 15px;
+        }
+      }
+    }
+  }
+
+  &__respo {
+    display: none;
+    width: 30px;
+    height: 30px;
+    position: relative;
+    -webkit-transform: rotate(0deg);
+    -moz-transform: rotate(0deg);
+    -o-transform: rotate(0deg);
+    transform: rotate(0deg);
+    -webkit-transition: 0.5s ease-in-out;
+    -moz-transition: 0.5s ease-in-out;
+    -o-transition: 0.5s ease-in-out;
+    transition: 0.5s ease-in-out;
+    cursor: pointer;
+    @media (max-width: $max-sm) {
+      display: block;
+    }
+
+    span {
+      display: block;
+      position: absolute;
+      height: 4px;
+      width: 100%;
+      background: #000;
+      border-radius: 3px;
+      opacity: 1;
+      left: 0;
+      -webkit-transform: rotate(0deg);
+      -moz-transform: rotate(0deg);
+      -o-transform: rotate(0deg);
+      transform: rotate(0deg);
+      @extend .easing;
+
+      &:nth-child(1) {
+        top: 0;
+      }
+
+      &:nth-child(2),
+      &:nth-child(3) {
+        top: 9px;
+      }
+
+      &:nth-child(4) {
+        top: 18px;
+      }
+    }
+
+    &--open {
+      span {
+        &:nth-child(1) {
+          top: 9px;
+          width: 0;
+          left: 50%;
+        }
+
+        &:nth-child(2) {
+          -webkit-transform: rotate(45deg);
+          -moz-transform: rotate(45deg);
+          -o-transform: rotate(45deg);
+          transform: rotate(45deg);
+        }
+
+        &:nth-child(3) {
+          -webkit-transform: rotate(-45deg);
+          -moz-transform: rotate(-45deg);
+          -o-transform: rotate(-45deg);
+          transform: rotate(-45deg);
+        }
+
+        &:nth-child(4) {
+          top: 9px;
+          width: 0;
+          left: 50%;
+        }
+      }
+    }
+  }
+}

@@ -35,28 +35,31 @@
 </head>
 <body>
   <header class="header">
-    <div class="container">
-      <div class="header__logo"><a href="#">Project title</a></div>
-      <div class="header__respo">
-        <div class="icon">
-          <span></span>
-          <span></span>
-          <span></span>
-          <span></span>
-        </div>
-      </div>
-      <nav class="header__nav">
-        <ul>
-          <li>
-            <a href="#">First nav</a>
+    <div class="container">      
+      <nav class="navbar navbar-fixed-top">                
+        <a class="header__logo" href="#">Project title</a>        
+        <ul class="header__nav">
+          <li class="nav-item active">
+            <a class="nav-link" href="#">Home</a>
           </li>
-          <li>
-            <a href="#">Second nav</a>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Features</a>
           </li>
-          <li>
-            <a href="#">Third nav</a>
+          <li class="nav-item">
+            <a class="nav-link" href="#">Pricing</a>
           </li>
-        </ul>
-      </nav>
+          <li class="nav-item">
+            <a class="nav-link" href="#">About</a>
+          </li>
+        </ul>     
+        <div class="header__respo">
+          <div class="icon">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+        </div> 
+      </nav>    
     </div>  
   </header>

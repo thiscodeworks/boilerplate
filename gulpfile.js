@@ -195,11 +195,15 @@ gulp.task('sprites-svg', function() {
 
 gulp.task('sprites-sass', function() {
   gulp.src('src/core/img/symbols/*.svg')
-    .pipe(svgSymbols({
-      templates: [
-        `default-sass`
-      ],
-    }))
+    .pipe(
+      svgSymbols({        
+        svgAttrs: {
+          class: `svg-symbol`
+        },        
+        class: `.svg-symbol--%f`,        
+        templates: [`default-scss`],
+      })
+    )
     .pipe(gulp.dest('src/core/styles/helpers'));
 
   gutil.log('Symboly vygenerovány');
