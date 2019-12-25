@@ -2,7 +2,7 @@
   <main>
   
   </main>
-<div class="svgicons>
+<div class="svgicons">
   {{> partials/icons}} 
 </div>
 {{> partials/footer}}
