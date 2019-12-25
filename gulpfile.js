@@ -108,7 +108,8 @@ gulp.task('styles', function() {
       pkg: pkg
     }))
     //.pipe(sourcemaps.write(build.core.path.assets))
-    .pipe(gulp.dest(build.core.dist.styles));
+    .pipe(gulp.dest(build.core.dist.styles))
+    .pipe(notify("✅ SCSS zbuildováno!"));
 });
 
 gulp.task('scripts', function() {
@@ -125,7 +126,7 @@ gulp.task('scripts', function() {
     .pipe(plumber({
       errorHandler: notify.onError('Chyba v javascriptu: <%= error %>')
     }))
-    .pipe(jshint())      
+    .pipe(jshint())
     .pipe(uglify()).on("error", function(err) {
       notify.onError('Chyba v javascriptu: ' + err.cause)
     })
@@ -133,12 +134,13 @@ gulp.task('scripts', function() {
     .pipe(header(banner, {
       pkg: pkg
     }))
-    .pipe(gulp.dest(build.core.dist.scripts));
+    .pipe(gulp.dest(build.core.dist.scripts))
+    .pipe(notify("✅ JS zbuildováno!"));
 });
 
 gulp.task('copy', function() {
   return gulp
-    .src(build.core.path.assets+"/**", {
+    .src(build.core.path.assets + "/**", {
       allowEmpty: true
     })
     .pipe(imagemin([
@@ -211,7 +213,7 @@ gulp.task('sprites-sass', function() {
   gulp.src("dist/assets/svg-symbols.svg", {
       allowEmpty: true
     })
-    .pipe(rename("src/pages/partials/icons.hjs"))
+    .pipe(rename("icons.hjs"))
     .pipe(gulp.dest("src/pages/partials/"));
 
   gutil.log('Přejmenovány symboly na ikony.');
@@ -237,5 +239,5 @@ gulp.task('watch', gulp.series('browser-sync', 'build', function() {
   gulp.watch(build.core.path.scripts + "/*.js", gulp.series('scripts')).on('change', browserSync.reload);
   gulp.watch(build.core.path.assets + "/**", gulp.series('copy'));
   gulp.watch(build.core.path.assets + "/symbols/*.svg", gulp.series('sprites-svg', 'sprites-sass', 'embedSvgs'));
-  gutil.log(gutil.colors.green.bold.underline('Hlídám změnu v souborech ...'));    
+  gutil.log(gutil.colors.green.bold.underline('Hlídám změnu v souborech ...'));
 }));
