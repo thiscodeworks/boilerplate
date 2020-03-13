@@ -54,7 +54,7 @@
     "jquery": "^3.4.1",
     "jshint": "^2.10.2",
     "jshint-stylish": "^2.2.1",
-    "minimist": "1.2.0",
+    "minimist": "1.2.5",
     "moment": "^2.5.1",
     "negotiator": "^0.6.1",
     "popper.js": "^1.14.1",
