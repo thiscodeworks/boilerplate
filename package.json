@@ -62,6 +62,12 @@
     "slick-carousel": "^1.8.1",
     "streamqueue": "1.1.2",
     "through2": "^3.0.1",
-    "tiny-lr": "^1.1.1"
-  }
+    "tiny-lr": "^1.1.1",
+    "snyk": "^1.316.1"
+  },
+  "scripts": {
+    "snyk-protect": "snyk protect",
+    "prepublish": "npm run snyk-protect"
+  },
+  "snyk": true
 }
