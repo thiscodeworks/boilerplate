@@ -33,6 +33,7 @@ Clone it, run it:
 * Optimize all images
 * Compile, minify, autoprefix, and lint Sass
 * This boilerplate uses the latest versions of the following libraries:
+  * [`Bootstrap 4`](https://getbootstrap.com/)
   * [`Gulp 4`](https://gulpjs.com/)
   * [`Normalize.css`](https://necolas.github.com/normalize.css/)
   * [`jQuery`](https://jquery.com/)
