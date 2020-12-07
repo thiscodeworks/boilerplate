@@ -49,7 +49,7 @@
     "gulp-uglifycss": "^1.1.0",
     "gulp-util": "^3.0.8",
     "gulp-watch": "^5.0.1",
-    "highlight.js": "^9.15.9",
+    "highlight.js": "^10.4.1",
     "hogan.js": "^3.0.2",
     "jquery": "^3.4.1",
     "jshint": "^2.10.2",
