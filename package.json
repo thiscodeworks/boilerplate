@@ -33,7 +33,7 @@
     "gulp-hogan": "^2.0.0",
     "gulp-htmlmin": "^5.0.1",
     "gulp-if": "^3.0.0",
-    "gulp-imagemin": "^6.0.0",
+    "gulp-imagemin": "^8.0.0",
     "gulp-jshint": "^2.1.0",
     "gulp-livereload": "^4.0.1",
     "gulp-markdown": "^6.0.0",
